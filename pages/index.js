@@ -1,209 +1,167 @@
-import Head from 'next/head'
+import React from 'react'
+import * as R from 'ramda'
 
-export default function Home() {
+export default function index() {
+  const summaryPrice = 5000;
+  let textPayPerMonth = ''
+  const text = '2'
+  const numberPrice = Number(text)
+  if (numberPrice && numberPrice > 1) {
+    const payPerMonth = Math.ceil(summaryPrice / numberPrice);
+    textPayPerMonth = `ผ่อน ${payPerMonth} บาท ต่อเดือน`
+  } else {
+    textPayPerMonth = ''
+  }
+
+  const pureFunction = (x) => {
+    return 2 * x - 1
+  }
+  
+  const impureFunction = (x) => {
+    return init += 2 * x - 1
+  }
+  let init = 2
+
+  const number = [1, 2, 3, 4, 5]
+  let numberImperativeTopureFunction = []
+  for (let i = 0; i < number.length; i++) {
+    numberImperativeTopureFunction[i] = number[i] * 2;
+  }
+
+  const sq = number.map(n => n * 2);
+
+  const number2 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+  const pang = number2.map(n => n * 2).filter(n => n >= 10)
+
+  // function upperCase 
+  const upperCase = (o) => o.map(_o => ({ book: R.toUpper(_o.book) }))
+  const payload = '[{"book":"js"},{"book":"lamda"}]'
+  const pipeline = R.pipe(JSON.parse, upperCase, console.log)
+  pipeline(payload)
+  const compose = R.compose(console.log, upperCase, JSON.parse)
+  compose(payload)
+
+  const add = (x, y) => x + y
+
+  function addOneParameter(x) {
+    return function(y) {
+      return x + y
+    }
+  }
+
+  const a = x => y => z => x + y * z
+  const findX = a(2)
+  const findXY = findX(4)
+  const findXYZ = findXY(6)
+  
+
+  const h = (x, y, z) => x + y * z
+  
+
+  const addOne = addOneParameter(1)
+
+  //R.curry
+  const b = (x, y, z) => x + y * z
+  const withCurry = R.curry(b)
+
+  const FindX = withCurry(1)
+  const FindXY = FindX(3)
+  const FindXYZ = FindXY(6)
+
+  console.log('FindXYZ =', FindXYZ)
+
+  //partialApplied
+
+  const partialApplied = (
+    fn, 
+    ...args
+  ) => (
+    ..._args
+  ) => fn.apply(
+    null, [...args, ..._args]
+  )
+
+  const takeAllAtOnce = partialApplied(h, 1, 2, 3);
+  takeAllAtOnce()
+
+  const takeOnlyFn = partialApplied(h)
+  
+  const somePreDefineNumber = partialApplied(h, 1);
+
+  //R.partial
+
+  const RtakeAllAtOnce = R.partial(h, [2,3,4]);
+  const RtakeOnlyFn = R.partial(h);
+  const RtakeSomeOnDefine = R.partial(h, [2]);
+  const takeMore3AtOnce = R.partial(h)
+
+  // Point-free Programming
+  const pointPayload = '123456'
+  const _split = R.split('')
+  const _toNumber = (x) => Number(x)
+  const _toStr = (x) => String(x)
+  const _eachToNumber = (x) => x.map(_toNumber)
+  const _product = (x) => R.product(x) //คูณ ตัวเลขทั้งหมด
+  const _findEven = (x) => x.filter(n => n % 2 === 0)
+  const _concat = (x) => R.join('', x)
+
+  const findEvenFromProductResult = R.pipe(
+    _split,        // ['1','2','3','4','5','6']
+    _eachToNumber, // [1,2,3,4,5,6]
+    _product,      // 720
+    _toStr,        // '720'
+    _split,        // ['7','2','0']
+    _eachToNumber, // [7,2,0]
+    _findEven,     // [2,0]
+    _concat,       // 20
+    _toStr,        // '20'
+  )
+  const result = findEvenFromProductResult(pointPayload)
+  console.log(result)
+
+  // ใช้ Object.freeze เพื่อไม่ให้ object ถูกแก้ properties ได้
+  const obj = Object.freeze({ name : "John" });
+  // obj.name = 'Jame' //error
+  const Mr = (obj) => ({ ...obj, prefix: 'Mr'})
+  const objSpread = { fname : 'Pakornpong', lname: 'Hirunjaraspiwat', prefix: '' }
+  const withPrefix = Mr({ ...objSpread })
+  console.log('withPrefix =', withPrefix)
+
+  const Mrs = (obj) => ({...obj, prefix: 'Mr' })
+  const objs = { 
+  fname: 'John', 
+  lname: 'Doe', prefix: '', 
+  address: { hometown: '', city: '' },
+}
+const newObj = JSON.parse(JSON.stringify(objs))
+const withPrefixs = Mrs(newObj)
+console.log('withPrefixs = ', withPrefixs)
   return (
-    <div className="container">
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
-      <main>
-        <h1 className="title">
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
-
-        <p className="description">
-          Get started by editing <code>pages/index.js</code>
-        </p>
-
-        <div className="grid">
-          <a href="https://nextjs.org/docs" className="card">
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className="card">
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className="card"
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className="card"
-          >
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
-      </main>
-
-      <footer>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel Logo" className="logo" />
-        </a>
-      </footer>
-
-      <style jsx>{`
-        .container {
-          min-height: 100vh;
-          padding: 0 0.5rem;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-        }
-
-        main {
-          padding: 5rem 0;
-          flex: 1;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-        }
-
-        footer {
-          width: 100%;
-          height: 100px;
-          border-top: 1px solid #eaeaea;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        }
-
-        footer img {
-          margin-left: 0.5rem;
-        }
-
-        footer a {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        }
-
-        a {
-          color: inherit;
-          text-decoration: none;
-        }
-
-        .title a {
-          color: #0070f3;
-          text-decoration: none;
-        }
-
-        .title a:hover,
-        .title a:focus,
-        .title a:active {
-          text-decoration: underline;
-        }
-
-        .title {
-          margin: 0;
-          line-height: 1.15;
-          font-size: 4rem;
-        }
-
-        .title,
-        .description {
-          text-align: center;
-        }
-
-        .description {
-          line-height: 1.5;
-          font-size: 1.5rem;
-        }
-
-        code {
-          background: #fafafa;
-          border-radius: 5px;
-          padding: 0.75rem;
-          font-size: 1.1rem;
-          font-family: Menlo, Monaco, Lucida Console, Liberation Mono,
-            DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace;
-        }
-
-        .grid {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          flex-wrap: wrap;
-
-          max-width: 800px;
-          margin-top: 3rem;
-        }
-
-        .card {
-          margin: 1rem;
-          flex-basis: 45%;
-          padding: 1.5rem;
-          text-align: left;
-          color: inherit;
-          text-decoration: none;
-          border: 1px solid #eaeaea;
-          border-radius: 10px;
-          transition: color 0.15s ease, border-color 0.15s ease;
-        }
-
-        .card:hover,
-        .card:focus,
-        .card:active {
-          color: #0070f3;
-          border-color: #0070f3;
-        }
-
-        .card h3 {
-          margin: 0 0 1rem 0;
-          font-size: 1.5rem;
-        }
-
-        .card p {
-          margin: 0;
-          font-size: 1.25rem;
-          line-height: 1.5;
-        }
-
-        .logo {
-          height: 1em;
-        }
-
-        @media (max-width: 600px) {
-          .grid {
-            width: 100%;
-            flex-direction: column;
-          }
-        }
-      `}</style>
-
-      <style jsx global>{`
-        html,
-        body {
-          padding: 0;
-          margin: 0;
-          font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
-            Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue,
-            sans-serif;
-        }
-
-        * {
-          box-sizing: border-box;
-        }
-      `}</style>
+    <div>
+      <h1>Hello</h1>
+      <h2>{textPayPerMonth}</h2>
+      <>
+        <h3>Pure function</h3>
+        <h4>{pureFunction(4)}</h4>
+        <h3>Impure function</h3>
+        <h4>{impureFunction(2)}</h4>
+        <h4>{impureFunction(2)}</h4>
+        <h4>{impureFunction(2)}</h4>
+        <h3>Imperative (จำเป็น)</h3>
+        <h4>{numberImperativeTopureFunction} หรือ [2, 4, 6, 8, 10]</h4>
+        <h3>Declarative</h3>
+        <h4>{sq}</h4>
+        <h3>Composition</h3>
+        <h4>{pang}</h4>
+        <h2>{takeAllAtOnce()}</h2>
+        <h3>{takeOnlyFn(1,2,3)}</h3>
+        <h2>{somePreDefineNumber(2,3)}</h2>
+        <h3>{takeOnlyFn(1,2,3,4,5,6,[1,2])}</h3>
+        <h2>{RtakeAllAtOnce()}</h2>
+        <h4>{RtakeOnlyFn([2,4,5])()} = จำเป็นต้องใส่ () เพื่อบอกเป็นฟังชัน</h4>
+        <h2>{RtakeSomeOnDefine(5,6)} check</h2>
+        <h1>{takeMore3AtOnce([1, 2, 3, 4, 5, 6, 7, 8, 9, [1,2,4], 'test'])()}</h1>
+      </>
     </div>
   )
 }
